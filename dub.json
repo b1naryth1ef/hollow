@@ -1,0 +1,9 @@
+{
+  "name": "hollow",
+  "description": "Logging library that works",
+  "authors": ["Andrei Zbikowski"],
+  "homepage": "http://github.com/b1naryth1ef/hollow",
+  "license": "GPL-2.0",
+  "targetType": "library"
+}
+
