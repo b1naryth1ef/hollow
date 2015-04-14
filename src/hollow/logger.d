@@ -2,6 +2,7 @@ module hollow.logger;
 
 import std.string;
 import hollow.outlets.outlet;
+import hollow.outlets.console;
 import hollow.formatters.formatter;
 
 class Logger {
@@ -45,6 +46,12 @@ class Logger {
     this.write(this.formatter.format("WARNING", format(fmt, args)));
   }
 
+}
+
+Logger newLogger(string name) {
+  Logger log = new Logger(name);
+  log.addOutlet(new ConsoleOutlet());
+  return log;
 }
 
 unittest {
