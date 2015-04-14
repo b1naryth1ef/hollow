@@ -4,11 +4,13 @@ import std.string;
 import hollow.outlets.outlet;
 import hollow.outlets.console;
 import hollow.formatters.formatter;
+import hollow.filters.filter;
 
 class Logger {
   string name;
 
   Outlet[] outlets;
+  Filter[] filters;
   Formatter formatter;
 
   this(string name) {
@@ -17,9 +19,19 @@ class Logger {
     this.formatter = new Formatter(this.name);
   }
 
+  this(string name, Outlet outlet) {
+    this.name = name;
+    this.formatter = new Formatter(this.name);
+    this.outlets ~= outlet;
+  }
+
   void addOutlet(Outlet outlet) {
     outlet.open();
     this.outlets ~= outlet;
+  }
+
+  void addFilter(Filter filter) {
+    this.filters ~= filter;
   }
 
   void close() {
@@ -29,6 +41,12 @@ class Logger {
   }
 
   void write(string line) {
+    foreach (i, filter; this.filters) {
+      if (!filter.shouldWriteLine(line)) {
+        return;
+      }
+    }
+
     foreach (i, outlet; this.outlets) {
       outlet.writeLine(line);
     }
@@ -62,5 +80,7 @@ unittest {
   log.addOutlet(f);
 
   log.INFO("test %s, %s, %s", 1, "LOL", log);
+  log.DEBUG("test %s, %s, %s", 1, "LOL", log);
+  log.WARNING("test %s, %s, %s", 1, "LOL", log);
 }
 
