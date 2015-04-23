@@ -52,6 +52,12 @@ class Logger {
     }
   }
 
+  void TRACE(T...)(Throwable t, string fmt, T args) {
+    string data = format(fmt, args) ~ ":\n" ~ t.toString();
+
+    this.write(this.formatter.format("EXCEPTION", data));
+  }
+
   void INFO(T...)(string fmt, T args) {
     this.write(this.formatter.format("INFO", format(fmt, args)));
   }
@@ -64,6 +70,9 @@ class Logger {
     this.write(this.formatter.format("WARNING", format(fmt, args)));
   }
 
+  void ERROR(T...)(string fmt, T args) {
+    this.write(this.formatter.format("ERROR", format(fmt, args)));
+  }
 }
 
 Logger newLogger(string name) {
@@ -82,5 +91,12 @@ unittest {
   log.INFO("test %s, %s, %s", 1, "LOL", log);
   log.DEBUG("test %s, %s, %s", 1, "LOL", log);
   log.WARNING("test %s, %s, %s", 1, "LOL", log);
+  log.ERROR("test %s, %s, %s", 1, "LOL", log);
+
+  try {
+    throw new Exception("test");
+  } catch (Exception e) {
+    log.TRACE(e, "test %s, %s, %s", 1, "LOL", log);
+  }
 }
 
